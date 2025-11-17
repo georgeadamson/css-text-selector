@@ -6,14 +6,14 @@ function enableCssTextSelector(options = {}) {
     exclude: "APPLET,AREA,BODY,CANVAS,FRAME,HEAD,HTML,IFRAME,LINK,MAP,META,NOSCRIPT,SCRIPT,STYLE,SVG,TITLE".split(','),
     lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text by replacing line feeds with &#10;
     rootSelector: 'body',
-    attrName: 'data-innertext', // Can be a custom HTML attribute or a CSS custom --property
+    attrName: 'data-textcontent', // Can be a custom HTML attribute or a CSS custom --property
     strictCase: false, // When false (default) all text will be converted to lowercase so that CSS selectors can be case-insensitive
   }
 
   // Merge defaults with options and derive the final list of selectors to exclude:
   const { include, exclude, attrName, strictCase, lfRegex, rootSelector, forceInit } = { ...defaults, ...options };
-  const includes = include.map(s => String(s).toUpperCase());
-  const excludes = exclude.map(s => String(s).toUpperCase()).filter(s => !includes.includes(s));
+  const includes = include.map(s => s.toUpperCase());
+  const excludes = exclude.map(s => s.toUpperCase()).filter(s => !includes.includes(s));
   const excludeSelectors = excludes.join(',');
   const attrNameIsCssCustomProperty = attrName.startsWith('--');
 
