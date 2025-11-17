@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS Text CSS Selector</title>
+</head>
+
+<body>
+  <h1>CSS Text CSS Selector</h1>
+
+  <h2>ES Module Version (from source)</h2>
+  <script type="module">
+    import enableCssTextSelector from '/src/main.js';
+    enableCssTextSelector({ forceInit: true, include: ['title'], strictCase: false });
+  </script>
+
+  <!-- <h2>Regular Script Version (from built UMD)</h2>
+  <script src="/dist/css-text-selector.min.js"></script>
+  <script>
+    // This will work after the UMD build is created
+    if (typeof enableCssTextSelector !== 'undefined') {
+      enableCssTextSelector({ forceInit: true, include: ['title'], strictCase: true });
+    }
+  </script> -->
+
+  <p>Hello&lt;wrld</p>
+  <p>woORld</p>
+  <p contenteditable>editable</p>
+</body>
+
+</html>
