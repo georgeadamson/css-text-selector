@@ -1,6 +1,6 @@
 # CSS Text Selector
 
-Helper to allow CSS to find elements by text content.
+Helper to empower CSS to find elements by text content.
 
 After runnning the script you can use this CSS to find elements by their inner text.
 
