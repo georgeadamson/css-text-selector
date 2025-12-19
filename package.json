@@ -1,7 +1,33 @@
 {
   "name": "css-text-selector",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
+  "description": "Helper to empower CSS to find elements by text content",
+  "main": "./dist/css-text-selector.js",
+  "module": "./dist/css-text-selector.module.js",
+  "browser": "./dist/css-text-selector.js",
+  "exports": {
+    ".": {
+      "import": "./dist/css-text-selector.module.js",
+      "require": "./dist/css-text-selector.js",
+      "default": "./dist/css-text-selector.module.js"
+    },
+    "./dist/css-text-selector.js": "./dist/css-text-selector.js",
+    "./dist/css-text-selector.min.js": "./dist/css-text-selector.min.js",
+    "./dist/css-text-selector.module.js": "./dist/css-text-selector.module.js",
+    "./dist/css-text-selector.module.min.js": "./dist/css-text-selector.module.min.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "keywords": [
+    "css",
+    "text-selector",
+    "dom",
+    "attribute",
+    "selector"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "node build.js",
