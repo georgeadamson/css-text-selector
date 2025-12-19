@@ -4,7 +4,7 @@ function enableCssTextSelector(options = {}) {
     forceInit: false,
     include: [], // selectors to include. Overrides exclude.
     exclude: "APPLET,AREA,BODY,CANVAS,FRAME,HEAD,HTML,IFRAME,LINK,MAP,META,NOSCRIPT,SCRIPT,STYLE,SVG,TITLE".split(','),
-    lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text by replacing line feeds with &#10;
+    lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text content by replacing line feeds with &#10; to play nicely in an attribute
     rootSelector: 'body',
     attrName: 'data-textcontent', // Can be a custom HTML attribute or a CSS custom --property
     strictCase: false, // When false (default) all text will be converted to lowercase so that CSS selectors can be case-insensitive
@@ -15,7 +15,7 @@ function enableCssTextSelector(options = {}) {
   const includes = include.map(s => s.toUpperCase());
   const excludes = exclude.map(s => s.toUpperCase()).filter(s => !includes.includes(s));
   const excludeSelectors = excludes.join(',');
-  const attrNameIsCssCustomProperty = attrName.startsWith('--');
+  const isAttrNameCssCustomProperty = attrName.startsWith('--'); // Auto detect CSS custom --property
 
   // Set up the observer to watch for changes to text nodes in the DOM
   const observer = new MutationObserver((mutations) => {
@@ -37,7 +37,7 @@ function enableCssTextSelector(options = {}) {
       const updatedText = caseAdjustedText.replace(lfRegex, '&#10;');
 
       // Allow for CSS custom --property OR HTML attribute usage:
-      if (attrNameIsCssCustomProperty) {
+      if (isAttrNameCssCustomProperty) {
         el.style.setProperty(attrName, updatedText);
       } else {
         el.setAttribute(attrName, updatedText);
@@ -45,7 +45,7 @@ function enableCssTextSelector(options = {}) {
     }
   };
 
-  // Helper to run a callback immediately or as soon as possible, i.e. if the DOM is ready:
+  // Helper to run a callback immediately or as soon as possible, i.e. when DOM is ready:
   const runAsap = (callback) => {
     if (document.readyState === "loading") {
       addEventListener('DOMContentLoaded', callback);
