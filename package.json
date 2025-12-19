@@ -6,10 +6,12 @@
   "main": "./dist/css-text-selector.js",
   "module": "./dist/css-text-selector.module.js",
   "browser": "./dist/css-text-selector.js",
+  "types": "./css-text-selector.d.ts",
   "exports": {
     ".": {
       "import": "./dist/css-text-selector.module.js",
       "require": "./dist/css-text-selector.js",
+      "types": "./css-text-selector.d.ts",
       "default": "./dist/css-text-selector.module.js"
     },
     "./dist/css-text-selector.js": "./dist/css-text-selector.js",
@@ -19,6 +21,7 @@
   },
   "files": [
     "dist",
+    "css-text-selector.d.ts",
     "README.md"
   ],
   "keywords": [
