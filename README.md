@@ -1,6 +1,21 @@
 # CSS Text Selector
 
-A small project to build and distribute a minified JS file.
+Helper to allow CSS to find elements by text content.
+
+After runnning the script you can use this CSS to find elements by their inner text.
+
+Examples:
+
+```css
+p[data-textcontent*="banana"] {
+  /* Style paragraphs that contain specific text */
+}
+
+a[data-textcontent="show more"],
+a[data-textcontent="click here"] {
+  /* Highlight inaccessible links */
+}
+```
 
 ## Development
 
@@ -55,7 +70,7 @@ This will create four JS files in the `dist/` directory (both minified and unmin
 ```html
 <script src="dist/css-text-selector.min.js"></script>
 <script>
-  const disable = enableCssTextSelector();
+  enableCssTextSelector();
 </script>
 ```
 
@@ -63,20 +78,20 @@ This will create four JS files in the `dist/` directory (both minified and unmin
 ```html
 <script src="dist/css-text-selector.js"></script>
 <script>
-  const disable = enableCssTextSelector();
+  enableCssTextSelector();
 </script>
 ```
 
 **As an ES module (minified):**
 ```javascript
 import enableCssTextSelector from './dist/css-text-selector.module.min.js';
-const disable = enableCssTextSelector();
+enableCssTextSelector();
 ```
 
 **As an ES module (unminified):**
 ```javascript
 import enableCssTextSelector from './dist/css-text-selector.module.js';
-const disable = enableCssTextSelector();
+enableCssTextSelector();
 ```
 
 ## Preview Production Build
