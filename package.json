@@ -1,6 +1,6 @@
 {
   "name": "css-text-selector",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "type": "module",
   "description": "Helper to empower CSS to find elements by text content",
   "main": "./dist/css-text-selector.js",
