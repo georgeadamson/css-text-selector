@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "node build.js",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "bump": "npm version patch && git push"
   },
   "devDependencies": {
     "vite": "^5.0.0",
