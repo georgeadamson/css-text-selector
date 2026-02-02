@@ -1,27 +1,41 @@
+// Helper to enable CSS to select elements by their inner text, by using a custom data-textcontent attribute
 function enableCssTextSelector(options = {}) {
-
   const defaults = {
     forceInit: false,
     include: [], // selectors to include. Overrides exclude.
-    exclude: "APPLET,AREA,BODY,CANVAS,FRAME,HEAD,HTML,IFRAME,LINK,MAP,META,NOSCRIPT,SCRIPT,STYLE,SVG,TITLE".split(','),
-    lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text content by replacing line feeds with &#10; to play nicely in an attribute
-    rootSelector: 'body',
-    attrName: 'data-textcontent', // Can be a custom HTML attribute or a CSS custom --property
-    strictCase: false, // When false (default) all text will be converted to lowercase so that CSS selectors can be case-insensitive
-  }
+    exclude:
+      "APPLET,AREA,BODY,CANVAS,FRAME,HEAD,HTML,IFRAME,LINK,MAP,META,NOSCRIPT,SCRIPT,STYLE,SVG,TITLE".split(
+        ",",
+      ),
+    lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text content by replacing line feeds with &#10; to play nicely in an attribute.
+    rootSelector: "body",
+    attrName: "data-textContent", // Can be a custom HTML attribute or a CSS custom --property. Attribute names are case-insensitive.
+    strictCase: false, // When false (default) all text will be converted to lowercase so that CSS selectors can effectively be case-insensitive.
+  };
 
   // Merge defaults with options and derive the final list of selectors to exclude:
-  const { include, exclude, attrName, strictCase, lfRegex, rootSelector, forceInit } = { ...defaults, ...options };
-  const includes = include.map(s => s.toUpperCase());
-  const excludes = exclude.map(s => s.toUpperCase()).filter(s => !includes.includes(s));
-  const excludeSelectors = excludes.join(',');
-  const isAttrNameCssCustomProperty = attrName.startsWith('--'); // Auto detect CSS custom --property
+  const {
+    include,
+    exclude,
+    attrName,
+    strictCase,
+    lfRegex,
+    rootSelector,
+    forceInit,
+  } = { ...defaults, ...options };
+  const includes = include.map((s) => s.toUpperCase());
+  const excludes = exclude
+    .map((s) => s.toUpperCase())
+    .filter((s) => !includes.includes(s));
+  const excludeSelectors = excludes.join(",");
+  const isAttrNameCssCustomProperty = attrName.startsWith("--"); // Auto detect CSS custom --property
 
   // Set up the observer to watch for changes to text nodes in the DOM
   const observer = new MutationObserver((mutations) => {
     for (const mutation of mutations) {
-      for (const node of mutation.addedNodes) {
-        if (node.nodeType === 3) { // 3 === Node.TEXT_NODE
+      for (const node of Array.from(mutation.addedNodes)) {
+        if (node.nodeType === 3) {
+          // 3 === Node.TEXT_NODE
           onTextChanged(node);
         }
       }
@@ -33,8 +47,10 @@ function enableCssTextSelector(options = {}) {
     const el = node.nodeType === 1 ? node : node.parentNode; // 1 === Node.ELEMENT_NODE
 
     if (!el.matches(excludeSelectors)) {
-      const caseAdjustedText = strictCase ? el.textContent : el.textContent.toLowerCase();
-      const updatedText = caseAdjustedText.replace(lfRegex, '&#10;');
+      const caseAdjustedText = strictCase
+        ? el.textContent
+        : el.textContent.toLowerCase();
+      const updatedText = caseAdjustedText.replace(lfRegex, "&#10;");
 
       // Allow for CSS custom --property OR HTML attribute usage:
       if (isAttrNameCssCustomProperty) {
@@ -45,10 +61,10 @@ function enableCssTextSelector(options = {}) {
     }
   };
 
-  // Helper to run a callback immediately or as soon as possible, i.e. when DOM is ready:
+  // Helper to run a callback immediately or as soon as the DOM is ready:
   const runAsap = (callback) => {
     if (document.readyState === "loading") {
-      addEventListener('DOMContentLoaded', callback);
+      addEventListener("DOMContentLoaded", callback);
     } else {
       callback();
     }
@@ -58,9 +74,9 @@ function enableCssTextSelector(options = {}) {
   const getRoot = () =>
     document.querySelector(rootSelector) || document.documentElement;
 
-  // Helper to force initial population of the data-innertext attribute immediately:
+  // Helper to force initial population of all the data-innertext attributes immediately:
   const initExistingDomElements = () => {
-    getRoot().querySelectorAll('*').forEach(onTextChanged);
+    getRoot().querySelectorAll("*").forEach(onTextChanged);
   };
 
   // Start watching the DOM for text changes:
@@ -78,8 +94,10 @@ function enableCssTextSelector(options = {}) {
   });
 
   // Expose options and helper functions
-  enableCssTextSelector.defaults = defaults;
-  enableCssTextSelector.forceInit = initExistingDomElements;
+  Object.assign(enableCssTextSelector, {
+    defaults,
+    forceInit: initExistingDomElements,
+  });
 
   // Return a helper to switch this thing off:
   return () => observer.disconnect();
