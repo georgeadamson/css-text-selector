@@ -105,8 +105,10 @@ disableCssTextSelector();
 const disconnect = enableCssTextSelector(options);
 ```
 
-`enableCssTextSelector()` starts a `MutationObserver` on `document.body` by
-default and returns a disconnect function.
+`enableCssTextSelector()` starts a `MutationObserver` on the element matched by
+`rootSelector` and returns a disconnect function. By default, `rootSelector` is
+`"body"`; if no matching element exists, it falls back to
+`document.documentElement`.
 
 ```js
 enableCssTextSelector.forceInit();
