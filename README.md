@@ -126,7 +126,7 @@ programmatic DOM updates.
 | `strictCase` | `false` | When `false`, text is lowercased before it is written so CSS matching can be effectively case-insensitive. |
 | `exclude` | built-in list | Selectors to skip. Defaults to document, media, metadata, script, style, SVG, and other non-content elements. |
 | `include` | `[]` | Selectors to allow even if they appear in `exclude`, for example `["TITLE"]`. |
-| `lfRegex` | `/(?:\r\n|\r|\n)/g` | Regular expression used to replace line breaks with `&#10;` before writing text into the attribute. |
+| `lfRegex` | `/(?:\r\n⏐\r⏐\n)\/g` | Regular expression used to replace line breaks with `&#10;` before writing text into the attribute. |
 
 ## Examples
 
