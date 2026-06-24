@@ -229,3 +229,9 @@ Test the source ES module in `index.html`:
 
 The Vite dev server can also serve the UMD build at
 `/dist/css-text-selector.js`; it is built on first request if needed.
+
+Run unit tests:
+
+```bash
+npm test
+```
