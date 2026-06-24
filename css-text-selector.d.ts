@@ -26,7 +26,7 @@ export interface CssTextSelectorOptions {
   rootSelector?: string;
   /**
    * Attribute name or CSS custom property (must start with '--' for CSS custom property)
-   * @default 'data-textcontent'
+   * @default 'data-contains'
    */
   attrName?: string;
   /**
@@ -55,5 +55,4 @@ declare namespace enableCssTextSelector {
 }
 
 export default enableCssTextSelector;
-
 

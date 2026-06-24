@@ -1,149 +1,229 @@
-# CSS Selector for text content
+# css-text-selector
 
-Helper to empower CSS to find elements by text content or inner text.
+Use CSS selectors to match DOM elements by their text content.
 
-After runnning the script you can use this CSS to find elements by their inner text.
+Browsers do not provide a native CSS `:contains()` selector. `css-text-selector`
+fills that gap by copying each element's `textContent` into an attribute, then
+keeping newly added text in sync with a `MutationObserver`.
 
-Examples:
+```html
+<button>Save draft</button>
+```
+
+becomes:
+
+```html
+<button data-contains="save draft">Save draft</button>
+```
+
+Now ordinary CSS attribute selectors can target the text:
 
 ```css
-p[data-textcontent*="banana"] {
-  /* Style paragraphs that contain specific text */
+button[data-contains="save draft"] {
+  font-weight: 700;
 }
 
-a[data-textcontent="show more"],
-a[data-textcontent="click here"] {
-  /* Highlight inaccessible links */
+[data-contains*="error"] {
+  outline: 2px solid crimson;
+}
+
+a[data-contains="click here"],
+a[data-contains="show more"] {
+  text-decoration-style: wavy;
 }
 ```
 
-## Development
+By default text is lowercased, so write selector values in lowercase unless you
+enable `strictCase`.
 
-```bash
-npm install css-text-selector
-npm run dev
-```
+## When to use it
 
-This will start a dev server at `http://localhost:3010` with hot module replacement.
+Use this when you need CSS-only styling hooks for text-driven UI states, quick
+browser prototypes, CMS or admin screens where classes are hard to add, visual
+testing helpers, or accessibility checks such as finding vague link text.
 
-### Using Both Versions in Dev
-
-In the dev environment, you can test both versions:
-
-**ES Module Version (from source):**
-```html
-<script type="module">
-  import enableCssTextSelector from '/src/main.js';
-  enableCssTextSelector();
-</script>
-```
-
-**Regular Script Version (UMD - auto-built on first request):**
-```html
-<script src="/dist/css-text-selector.js"></script>
-<script>
-  enableCssTextSelector();
-</script>
-```
-
-The UMD version is automatically built and served when first requested in dev mode.
+This is a browser helper for CSS matching. It uses `textContent`, not rendered
+`innerText`, so hidden text and script-generated text can be included depending
+on the element.
 
 ## Installation
 
-### npm
 ```bash
 npm install css-text-selector
 ```
 
-### CDN (via unpkg)
-```html
-<!-- Minified -->
-<script src="https://unpkg.com/css-text-selector/dist/css-text-selector.min.js"></script>
+You can also load a browser build from a CDN:
 
-<!-- Unminified -->
-<script src="https://unpkg.com/css-text-selector/dist/css-text-selector.js"></script>
+```html
+<script src="https://unpkg.com/css-text-selector/dist/css-text-selector.min.js"></script>
 ```
 
-### CDN (via jsDelivr)
 ```html
-<!-- Minified -->
 <script src="https://cdn.jsdelivr.net/npm/css-text-selector/dist/css-text-selector.min.js"></script>
-
-<!-- Unminified -->
-<script src="https://cdn.jsdelivr.net/npm/css-text-selector/dist/css-text-selector.js"></script>
 ```
 
 ## Usage
 
-### npm / ES Modules
+### ES modules
 
-**ES Module import (recommended):**
-```javascript
-import enableCssTextSelector from 'css-text-selector';
-enableCssTextSelector();
+```js
+import enableCssTextSelector from "css-text-selector";
+
+const disableCssTextSelector = enableCssTextSelector({
+  forceInit: true,
+});
 ```
 
-**CommonJS require:**
-```javascript
-const enableCssTextSelector = require('css-text-selector');
-enableCssTextSelector();
+Call the returned function when you want to stop observing DOM changes:
+
+```js
+disableCssTextSelector();
 ```
 
-**Direct import from dist:**
-```javascript
-// ES Module
-import enableCssTextSelector from 'css-text-selector/dist/css-text-selector.module.js';
+### Browser script tag
 
-// Or minified
-import enableCssTextSelector from 'css-text-selector/dist/css-text-selector.module.min.js';
-```
-
-### Browser Script Tag
-
-**Via CDN (minified):**
 ```html
 <script src="https://unpkg.com/css-text-selector/dist/css-text-selector.min.js"></script>
 <script>
-  enableCssTextSelector();
+  enableCssTextSelector({ forceInit: true });
 </script>
 ```
 
-**Local file:**
-```html
-<script src="./node_modules/css-text-selector/dist/css-text-selector.min.js"></script>
-<script>
-  enableCssTextSelector();
-</script>
-```
-
-### Browser ES Module
+### Browser ES module
 
 ```html
 <script type="module">
-  import enableCssTextSelector from 'https://unpkg.com/css-text-selector/dist/css-text-selector.module.min.js';
-  enableCssTextSelector();
+  import enableCssTextSelector from "https://unpkg.com/css-text-selector/dist/css-text-selector.module.min.js";
+
+  enableCssTextSelector({ forceInit: true });
 </script>
 ```
 
-## Build
+## API
 
-```bash
-npm run build
+```js
+const disconnect = enableCssTextSelector(options);
 ```
 
-This will create four JS files in the `dist/` directory (both minified and unminified versions):
+`enableCssTextSelector()` starts a `MutationObserver` on `document.body` by
+default and returns a disconnect function.
 
-**UMD format (for script tags and CommonJS):**
-- `css-text-selector.js` - Unminified version
-- `css-text-selector.min.js` - Minified version
-
-**ES module format:**
-- `css-text-selector.module.js` - Unminified version
-- `css-text-selector.module.min.js` - Minified version
-
-## Preview Production Build
-
-```bash
-npm run preview
+```js
+enableCssTextSelector.forceInit();
 ```
 
+After the helper has been enabled, `forceInit()` rescans the current root and
+populates attributes on existing elements. This is useful after large
+programmatic DOM updates.
+
+## Options
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `forceInit` | `false` | Populate matching existing DOM elements as soon as the DOM is ready. Set this to `true` for most immediate styling use cases. |
+| `rootSelector` | `"body"` | CSS selector for the root element to scan and observe. Falls back to `document.documentElement` if no match is found. |
+| `attrName` | `"data-contains"` | Attribute to write. If the name starts with `--`, it is written as an inline CSS custom property instead. |
+| `strictCase` | `false` | When `false`, text is lowercased before it is written so CSS matching can be effectively case-insensitive. |
+| `exclude` | built-in list | Selectors to skip. Defaults to document, media, metadata, script, style, SVG, and other non-content elements. |
+| `include` | `[]` | Selectors to allow even if they appear in `exclude`, for example `["TITLE"]`. |
+| `lfRegex` | `/(?:\r\n|\r|\n)/g` | Regular expression used to replace line breaks with `&#10;` before writing text into the attribute. |
+
+## Examples
+
+Limit work to part of the page:
+
+```js
+enableCssTextSelector({
+  rootSelector: "#app",
+  forceInit: true,
+});
+```
+
+Use a custom attribute:
+
+```js
+enableCssTextSelector({
+  attrName: "data-css-text",
+  forceInit: true,
+});
+```
+
+```css
+[data-css-text*="loading"] {
+  opacity: 0.6;
+}
+```
+
+Preserve case-sensitive text:
+
+```js
+enableCssTextSelector({
+  strictCase: true,
+  forceInit: true,
+});
+```
+
+```css
+[data-contains="SKU-123"] {
+  font-family: monospace;
+}
+```
+
+Write text into a CSS custom property instead of an attribute:
+
+```js
+enableCssTextSelector({
+  attrName: "--text-content",
+  forceInit: true,
+});
+```
+
+```css
+[style*="--text-content"]::after {
+  content: " (" var(--text-content) ")";
+}
+```
+
+## Notes
+
+- Existing DOM elements are only populated automatically when `forceInit` is
+  `true`.
+- Newly added text nodes are observed after the helper starts.
+- Directly changing an existing `Text` node's `nodeValue` may require
+  `enableCssTextSelector.forceInit()` because the observer watches child list
+  changes, not character data mutations.
+- The default excluded selectors avoid writing text into document structure,
+  script, style, media, and SVG elements.
+
+## Builds
+
+`npm run build` creates four files in `dist/`:
+
+| File | Format | Minified |
+| --- | --- | --- |
+| `dist/css-text-selector.js` | UMD browser/global build | No |
+| `dist/css-text-selector.min.js` | UMD browser/global build | Yes |
+| `dist/css-text-selector.module.js` | ES module | No |
+| `dist/css-text-selector.module.min.js` | ES module | Yes |
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
+
+The dev server runs at `http://localhost:3010`.
+
+Test the source ES module in `index.html`:
+
+```html
+<script type="module">
+  import enableCssTextSelector from "/src/main.js";
+
+  enableCssTextSelector({ forceInit: true });
+</script>
+```
+
+The Vite dev server can also serve the UMD build at
+`/dist/css-text-selector.js`; it is built on first request if needed.

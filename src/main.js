@@ -1,4 +1,4 @@
-// Helper to enable CSS to select elements by their inner text, by using a custom data-textcontent attribute
+// Helper to enable CSS to select elements by their inner text, by using a custom data-contains attribute
 function enableCssTextSelector(options = {}) {
   const defaults = {
     forceInit: false,
@@ -9,7 +9,7 @@ function enableCssTextSelector(options = {}) {
       ),
     lfRegex: /(?:\r\n|\r|\n)/g, // Will tidy up text content by replacing line feeds with &#10; to play nicely in an attribute.
     rootSelector: "body",
-    attrName: "data-textContent", // Can be a custom HTML attribute or a CSS custom --property. Attribute names are case-insensitive.
+    attrName: "data-contains", // Can be a custom HTML attribute or a CSS custom --property. Attribute names are case-insensitive.
     strictCase: false, // When false (default) all text will be converted to lowercase so that CSS selectors can effectively be case-insensitive.
   };
 

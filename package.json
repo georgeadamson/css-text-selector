@@ -1,8 +1,8 @@
 {
   "name": "css-text-selector",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
-  "description": "Helper to empower CSS to find elements by text content",
+  "description": "Add data-contains attributes so CSS can match DOM elements by textContent.",
   "main": "./dist/css-text-selector.js",
   "module": "./dist/css-text-selector.module.js",
   "browser": "./dist/css-text-selector.js",
@@ -26,10 +26,24 @@
   ],
   "keywords": [
     "css",
+    "selector",
+    "text",
+    "text-content",
+    "textcontent",
+    "innertext",
+    "contains",
+    "css-contains",
+    "css-has-text",
     "text-selector",
+    "attribute-selector",
+    "data-attribute",
+    "data-contains",
     "dom",
-    "attribute",
-    "selector"
+    "mutationobserver",
+    "browser",
+    "javascript",
+    "accessibility",
+    "testing"
   ],
   "scripts": {
     "dev": "vite",
