@@ -2,7 +2,7 @@
 
 Use CSS selectors to match DOM elements by their text content.
 
-Browsers do not provide a native CSS `:contains()` selector. `css-text-selector`
+Browsers do not provide a native CSS `:contains()` selector (but see the solution further down to use that syntax). `css-text-selector`
 fills that gap by copying each element's `textContent` into an attribute, then
 keeping newly added text in sync with a `MutationObserver`.
 
@@ -185,6 +185,61 @@ enableCssTextSelector({
   content: " (" var(--text-content) ")";
 }
 ```
+
+## Optional `:contains()` Build Step
+
+If you want to author CSS with a theoretical `:contains()` selector, you can
+use [`postcss-replace`](https://www.npmjs.com/package/postcss-replace) to
+rewrite that syntax at build time:
+
+```bash
+npm install --save-dev postcss postcss-replace
+```
+
+Add a PostCSS config:
+
+```js
+// postcss.config.cjs
+module.exports = {
+  plugins: [
+    require("postcss-replace")({
+      pattern: /:contains\(\s*(["']?)(.*?)\1\s*\)/g,
+      data: {
+        replaceAll: '[data-contains="$2"]',
+      },
+    }),
+  ],
+};
+```
+
+Then write CSS like this:
+
+```css
+button:contains(save draft) {
+  font-weight: 700;
+}
+
+a:contains("show more") {
+  text-decoration-style: wavy;
+}
+```
+
+PostCSS outputs ordinary attribute selectors:
+
+```css
+button[data-contains="save draft"] {
+  font-weight: 700;
+}
+
+a[data-contains="show more"] {
+  text-decoration-style: wavy;
+}
+```
+
+This is only a build-time transform; browsers still receive normal CSS. With
+the default `strictCase: false`, write `:contains()` text in lowercase. Use
+`strictCase: true` if you want the generated selector values to preserve and
+match exact case.
 
 ## Notes
 
