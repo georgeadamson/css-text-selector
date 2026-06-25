@@ -66,16 +66,10 @@ export default defineConfig({
       },
       formats: ['es', 'umd']
     },
-    minify: false,
-    rollupOptions: {
-      output: {
-        compact: true
-      }
-    }
+    minify: false
   },
   server: {
     port: 3010,
     open: true
   }
 });
-

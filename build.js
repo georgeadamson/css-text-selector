@@ -13,11 +13,6 @@ const baseConfig = {
       entry: resolve(__dirname, 'src/main.js'),
       name: 'enableCssTextSelector',
       formats: ['es', 'umd']
-    },
-    rollupOptions: {
-      output: {
-        compact: true
-      }
     }
   }
 };
@@ -40,7 +35,6 @@ await build({
     minify: 'terser',
     outDir: 'dist',
     rollupOptions: {
-      ...baseConfig.build.rollupOptions,
       plugins: []
     }
   },
@@ -93,4 +87,3 @@ await build({
 });
 
 console.log('Build complete!');
-
