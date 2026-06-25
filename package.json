@@ -1,6 +1,6 @@
 {
   "name": "css-text-selector",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "description": "Add data-contains attributes so CSS can match DOM elements by textContent.",
   "main": "./dist/css-text-selector.js",
